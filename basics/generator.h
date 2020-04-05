@@ -36,9 +36,13 @@ class generator {
       hnd_.destroy();
   }
   // TODO Implement iterator interface
-
   struct iterator_sentinel{};
+
+  iterator begin() { return iterator{hnd_}; }
+  iterator_sentinel end() { return {}; }
+
   class iterator : public std::iterator<std::input_iterator_tag, T> {
+  public:
     iterator() noexcept : hnd_{nullptr} {};
     explicit iterator(handle_type h) noexcept : hnd_{h} {};
     iterator(const iterator&) = default;
@@ -50,6 +54,9 @@ class generator {
     };
     bool operator==(const iterator_sentinel& s) {
       return !hnd_ || hnd_.done();
+    }
+    bool operator!=(const iterator_sentinel& s) {
+      return !operator==(s);
     }
     iterator& operator++() {
       hnd_.resume();
