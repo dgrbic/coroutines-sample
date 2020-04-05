@@ -23,7 +23,7 @@ class generator {
  public:
   explicit generator(handle_type h) : hnd_(h) {}
   generator(const generator&) = delete;  // No copy allowed
-  generator& operator=(consr generator&) = delete;
+  generator& operator=(const generator&) = delete;
   generator(generator&& g) noexcept : hnd_(g.hnd_) { g.hnd_ = nullptr; }
   generator& operator=(generator&& g) noexcept {
     hnd_ = g.hnd_;
@@ -59,10 +59,10 @@ class generator {
     void operator++(int) {
         operator++();
     }
-    reference operator*() const noexcept {
+    reference_type operator*() const noexcept {
       return hnd_.promise().value();
     }
-    pointer operator->() const noexcept {
+    pointer_type operator->() const noexcept {
       return &(operator*());
     }
 
@@ -79,7 +79,7 @@ class generator {
    public:
     promise_type() = default;
     ~promise_type() = default;
-    primise_type(const promise_type&) = delete;
+    promise_type(const promise_type&) = delete;
     promise_type(promise_type&&) = delete;
     promise_type& operator=(const promise_type&) = delete;
     promise_type& operator=(promise_type&&) = delete;
@@ -102,10 +102,10 @@ class generator {
     }
     reference_type value() {
       if (val_) return static_cast<reference_type>(*val_);
-      else std::throw(std::future_error::future_error (std::future_errc::no_state) );
+      else throw std::future_error(std::future_errc::no_state);
     }
     void unhandled_exception() { std::exit(1); }
-  }
+  };
 };
 
 }  // namespace dg::coro
